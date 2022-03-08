@@ -1,0 +1,559 @@
+/*
+LAMBDA samples as described in blog at https://www.xlegant.com/
+*/
+
+
+Age = LAMBDA(birthdate, ROUNDDOWN((TODAY() - birthdate) / 365.25, 0));
+
+alphabet = {
+    "a";
+    "b";
+    "c";
+    "d";
+    "e";
+    "f";
+    "g";
+    "h";
+    "i";
+    "j";
+    "k";
+    "l";
+    "m";
+    "n";
+    "o";
+    "p";
+    "q";
+    "r";
+    "s";
+    "t";
+    "u";
+    "v";
+    "w";
+    "x";
+    "y";
+    "z"
+};
+
+AreaCircle = LAMBDA(radius, PI() * radius ^ 2);
+
+AreaParallelogram = LAMBDA(base, height, base * height);
+
+AreaRectangle = LAMBDA(length, width, length * width);
+
+AreaSquare = LAMBDA(side, side ^ 2);
+
+AreaTrapezoid = LAMBDA(height, base1, base2, height * (base1 + base2) / 2);
+
+AreaTriangle = LAMBDA(base, height, base * height / 2);
+
+Calendar = LAMBDA(month, week, weeks, format,
+    LET(
+        weekstart, IF(week = 2, 2, 3),
+        from, IF(month > 120, month, EDATE(TODAY(), month)),
+        startday, EOMONTH(from, -1) + 1,
+        days, SEQUENCE(
+            IF(weeks, weeks, 5),
+            7,
+            startday - WEEKDAY(startday, weekstart)
+        ),
+        isfom, DAY(days) = 1,
+        TEXT(
+            days,
+            IFERROR(
+                CHOOSE(
+                    format,
+                    "m/d",
+                    IF(isfom, "mmm d", "d"),
+                    "m/d/y",
+                    IF(isfom, "mmm d, y", "d"),
+                    "d.m",
+                    IF(isfom, "d mmm", "d"),
+                    "d.m.y",
+                    IF(isfom, "d mmm y", "d")
+                ),
+                "d"
+            )
+        )
+    )
+);
+
+CalendarHeader = LAMBDA(start,
+    IF(
+        start = 2,
+        {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"},
+        {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
+    )
+);
+
+CardDeal = LAMBDA(pack, cards,
+    INDEX(SORTBY(pack, RANDARRAY(ROWS(pack))), SEQUENCE(cards))
+);
+
+CardPack = {
+    "2♠";
+    "3♠";
+    "4♠";
+    "5♠";
+    "6♠";
+    "7♠";
+    "8♠";
+    "9♠";
+    "T♠";
+    "J♠";
+    "Q♠";
+    "K♠";
+    "A♠";
+    "2♣";
+    "3♣";
+    "4♣";
+    "5♣";
+    "6♣";
+    "7♣";
+    "8♣";
+    "9♣";
+    "T♣";
+    "J♣";
+    "Q♣";
+    "K♣";
+    "A♣";
+    "2♥";
+    "3♥";
+    "4♥";
+    "5♥";
+    "6♥";
+    "7♥";
+    "8♥";
+    "9♥";
+    "T♥";
+    "J♥";
+    "Q♥";
+    "K♥";
+    "A♥";
+    "2♦";
+    "3♦";
+    "4♦";
+    "5♦";
+    "6♦";
+    "7♦";
+    "8♦";
+    "9♦";
+    "T♦";
+    "J♦";
+    "Q♦";
+    "K♦";
+    "A♦"
+};
+
+CellFormat = LAMBDA(ref,
+    LET(
+        first, LEFT(IF(ISREF(ref), CELL("format", ref), CELL("format")), 1),
+        IF(
+            first <> "D",
+            SWITCH(
+                first,
+                "G",
+                "General",
+                "F",
+                "Number",
+                ",",
+                "Number",
+                "C",
+                "Currency",
+                "P",
+                "Percent",
+                "S",
+                "Scientific"
+            ),
+            LET(
+                second, RIGHT(
+                    IF(ISREF(ref), CELL("format", ref), CELL("format")),
+                    1
+                ),
+                IF(second < "6", "Date", "Time")
+            )
+        )
+    )
+);
+
+Characters = {
+    "a";
+    "b";
+    "c";
+    "d";
+    "e";
+    "f";
+    "g";
+    "h";
+    "i";
+    "j";
+    "k";
+    "l";
+    "m";
+    "n";
+    "o";
+    "p";
+    "q";
+    "r";
+    "s";
+    "t";
+    "u";
+    "v";
+    "w";
+    "x";
+    "y";
+    "z";
+    "A";
+    "B";
+    "C";
+    "D";
+    "E";
+    "F";
+    "G";
+    "H";
+    "I";
+    "J";
+    "K";
+    "L";
+    "M";
+    "N";
+    "O";
+    "P";
+    "Q";
+    "R";
+    "S";
+    "T";
+    "U";
+    "V";
+    "W";
+    "X";
+    "Y";
+    "Z";
+    "0";
+    "1";
+    "2";
+    "3";
+    "4";
+    "5";
+    "6";
+    "7";
+    "8";
+    "9";
+    "@";
+    "&";
+    "$";
+    "!";
+    "#";
+    "?"
+};
+
+CharactersN = {
+    "a";
+    "b";
+    "c";
+    "d";
+    "e";
+    "f";
+    "g";
+    "h";
+    "i";
+    "j";
+    "k";
+    "l";
+    "m";
+    "n";
+    "o";
+    "p";
+    "q";
+    "r";
+    "s";
+    "t";
+    "u";
+    "v";
+    "w";
+    "x";
+    "y";
+    "z";
+    "A";
+    "B";
+    "C";
+    "D";
+    "E";
+    "F";
+    "G";
+    "H";
+    "I";
+    "J";
+    "K";
+    "L";
+    "M";
+    "N";
+    "O";
+    "P";
+    "Q";
+    "R";
+    "S";
+    "T";
+    "U";
+    "V";
+    "W";
+    "X";
+    "Y";
+    "Z";
+    "0";
+    "1";
+    "2";
+    "3";
+    "4";
+    "5";
+    "6";
+    "7";
+    "8";
+    "9";
+    "@";
+    "&";
+    "$";
+    "!";
+    "#";
+    "?";
+    "@";
+    "&";
+    "$";
+    "!";
+    "#";
+    "?";
+    "0";
+    "1";
+    "2";
+    "3";
+    "4";
+    "5";
+    "6";
+    "7";
+    "8";
+    "9";
+    "@";
+    "&";
+    "$";
+    "!";
+    "#";
+    "?";
+    "@";
+    "&";
+    "$";
+    "!";
+    "#";
+    "?"
+};
+
+CircleNumber = LAMBDA(number, type,
+    LET(
+        dark, N(type),
+        seg, IFNA(MATCH(number, {0, 1, 11, 21}), 4),
+        IFERROR(
+            UNICHAR(
+                CHOOSE(
+                    seg,
+                    IF(dark, 9471, 9450),
+                    number + IF(dark, 10101, 9311),
+                    number + IF(dark, 9440, 9311),
+                    ""
+                )
+            ),
+            ""
+        )
+    )
+);
+
+Circumference = LAMBDA(radius, 2 * PI() * radius);
+
+ColumnWidth = LAMBDA(ref,
+    "c " & IF(ISREF(ref), CELL("col", ref), CELL("col")) & " w " &
+        INDEX(IF(ISREF(ref), CELL("width", ref), CELL("width")), , 1) &
+        IF(
+            INDEX(IF(ISREF(ref), CELL("width", ref), CELL("width")), , 2),
+            " default",
+            " custom"
+        )
+);
+
+DieRoll = LAMBDA(roll,
+    IF(
+        CHOOSE(
+            IF(N(roll), MIN(MAX(INT(roll), 1), 6), RANDBETWEEN(1, 6)),
+            {0, 0, 0; 0, 1, 0; 0, 0, 0},
+            {1, 0, 0; 0, 0, 0; 0, 0, 1},
+            {1, 0, 0; 0, 1, 0; 0, 0, 1},
+            {1, 0, 1; 0, 0, 0; 1, 0, 1},
+            {1, 0, 1; 0, 1, 0; 1, 0, 1},
+            {1, 1, 1; 0, 0, 0; 1, 1, 1}
+        ),
+        UNICHAR(9679),
+        ""
+    )
+);
+
+Hypotenuse = LAMBDA(a, b, SQRT(a ^ 2 + b ^ 2));
+
+inList = LAMBDA(list, item, COUNTIF(list, item) > 0);
+
+IsPrime = LAMBDA(number,
+    IF(
+        OR(number < 2, MOD(number, 1)),
+        FALSE,
+        IFERROR(
+            OR(
+                number = 2,
+                AND(
+                    MOD(number, SEQUENCE(ROUNDUP(SQRT(number), 0) - 1, , 2)) <>
+                        0
+                )
+            ),
+            FALSE
+        )
+    )
+);
+
+LineIntercept = LAMBDA(x, y, slope, y - slope * x);
+
+LineSlope = LAMBDA(x, y, xxorb, yy,
+    IFERROR(IF(LEN(yy), (yy - y) / (xxorb - x), (y - xxorb) / x), "")
+);
+
+LineY = LAMBDA(x, slope, intercept, slope * x + intercept);
+
+LoanTotalInterest = LAMBDA(rate, nper, pv, type,
+    DOLLAR(CUMIPMT(rate, nper, pv, 1, nper, type))
+);
+
+LoanTotalInteresttoPrinciple = LAMBDA(rate, nper, pv, type,
+    CUMIPMT(rate, nper, pv, 1, nper, type) /
+        CUMPRINC(rate, nper, pv, 1, nper, type)
+);
+
+Password = LAMBDA(charlist, length,
+    IF(
+        length < 1,
+        "",
+        ARRAYTOTEXT(
+            INDEX(charlist, RANDBETWEEN(1, COUNTA(charlist))) &
+                Password(charlist, length - 1)
+        )
+    )
+);
+
+PerimeterCircle = LAMBDA(radius, 2 * PI() * radius);
+
+PerimeterParallelogram = LAMBDA(a, b, 2 * (a + b));
+
+PerimeterRectangle = LAMBDA(length, width, 2 * (length + width));
+
+PerimeterSquare = LAMBDA(side, 4 * side);
+
+PerimeterTrapezoid = LAMBDA(a, b, c, d, SUM(a, b, c, d));
+
+PerimeterTriangle = LAMBDA(a, b, c, SUM(a, b, c));
+
+PermutationsAll = LAMBDA(select, hold, from,
+    LET(
+        Items, ROWS(from),
+        Total, SEQUENCE(PERMUTATIONA(Items, hold)),
+        Repeat, Items ^ (select - 1),
+        Ticker, MOD(ROUNDUP(Total / Repeat, 0), Items),
+        Digit, IF(Ticker, Ticker, Items),
+        IF(
+            select < 1,
+            "",
+            INDEX(from, Digit) & PermutationsAll(select - 1, hold, from)
+        )
+    )
+);
+
+Quadratic = LAMBDA(a, b, c,
+    LET(
+        seg, SQRT(b ^ 2 - 4 * a * c),
+        pos, (-b + seg) / (2 * a),
+        neg, (-b - seg) / (2 * a),
+        stat, 1 * ISERR(pos) + 2 * ISERR(neg) + 1,
+        CHOOSE(stat, pos & "," & neg, neg, pos, "no solution")
+    )
+);
+
+Quarter = LAMBDA(dateormonth, type,
+    LET(
+        qtr, ROUNDUP(
+            IF(dateormonth > 12, MONTH(dateormonth), dateormonth) / 3,
+            0
+        ),
+        IF(N(type), qtr, CHOOSE(qtr, "JFM", "AMJ", "JAS", "OND"))
+    )
+);
+
+SurfaceCone = LAMBDA(radius, slant, PI() * radius * (radius + slant));
+
+SurfaceCylinder = LAMBDA(radius, height,
+    2 * PI() * (radius ^ 2 + radius * height)
+);
+
+SurfaceRectangularPrism = LAMBDA(length, width, height,
+    2 * (length * width + (length + width) * height)
+);
+
+SurfaceSphere = LAMBDA(radius, 4 * PI() * radius ^ 2);
+
+SurfaceSquareBasedPyramid = LAMBDA(side, slant, side * (side + 2 * slant));
+
+UnitKGtoLB = LAMBDA(number, type,
+    LET(
+        change, CONVERT(number, "kg", "lbm"),
+        IF(
+            N(type),
+            change,
+            number & " kg = " & TEXT(change, "#,##0.00") & " lbm"
+        )
+    )
+);
+
+UnitKMtoMI = LAMBDA(number, type,
+    LET(
+        change, CONVERT(number, "km", "mi"),
+        IF(
+            N(type),
+            change,
+            number & " km = " & TEXT(change, "#,##0.00") & " mi"
+        )
+    )
+);
+
+UnitLBtoKG = LAMBDA(number, type,
+    LET(
+        change, CONVERT(number, "lbm", "kg"),
+        IF(
+            N(type),
+            change,
+            number & " lbm = " & TEXT(change, "#,##0.00") & " kg"
+        )
+    )
+);
+
+UnitMItoKM = LAMBDA(number, type,
+    LET(
+        change, CONVERT(number, "mi", "km"),
+        IF(
+            N(type),
+            change,
+            number & " mi = " & TEXT(change, "#,##0.00") & " km"
+        )
+    )
+);
+
+VolumeCone = LAMBDA(radius, height, PI() * radius ^ 2 * height / 3);
+
+VolumeCylinder = LAMBDA(radius, height, PI() * radius ^ 2 * height);
+
+VolumeRectangularPrism = LAMBDA(length, width, height,
+    PRODUCT(length, width, height)
+);
+
+VolumeSphere = LAMBDA(radius, 4 * PI() * radius ^ 3 / 3);
+
+VolumeSquareBasedPyramid = LAMBDA(side, height, (side ^ 2) * height / 3);
