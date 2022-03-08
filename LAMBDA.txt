@@ -1,5 +1,16 @@
 /*
 LAMBDA samples as described in blog at https://www.xlegant.com/
+included are some array constants for use as inputs
+I am so far disappointed that the comments entered in Name Manager are not easily transferrable. 
+Comments are essential user help for sharing LAMBDAs. Any ideas how to copy them?
+I've tried 6 ways to copy names that all work, but only 2 include comments:
+1. ...\XLSTART\Book.xltx for new workbooks
+2. ...\Templates\LAMBDA.xltx (e.g.)
+
+Also, I have 46 LAMBDAs; 39 open the arg list as expected, 7 do not. 
+Example: CircleNumber does, Calendar doesn't. I have not found the cause.
+Name comment does appear as function description, prior to "(" - so I always include arg list in comment
+
 */
 
 
@@ -46,6 +57,12 @@ AreaTrapezoid = LAMBDA(height, base1, base2, height * (base1 + base2) / 2);
 
 AreaTriangle = LAMBDA(base, height, base * height / 2);
 
+/*
+Calendar
+month is offset (0=this month) up to 120, then date
+week used as WEEKDAY return type, default start Mon, 2=start Sun
+*/
+
 Calendar = LAMBDA(month, week, weeks, format,
     LET(
         weekstart, IF(week = 2, 2, 3),
@@ -85,6 +102,9 @@ CalendarHeader = LAMBDA(start,
     )
 );
 
+/*
+picks cards randomly without repeats
+*/
 CardDeal = LAMBDA(pack, cards,
     INDEX(SORTBY(pack, RANDARRAY(ROWS(pack))), SEQUENCE(cards))
 );
@@ -246,6 +266,9 @@ Characters = {
     "?"
 };
 
+/*
+like Characters but more balanced lower/upper/number/special
+*/
 CharactersN = {
     "a";
     "b";
@@ -345,6 +368,10 @@ CharactersN = {
     "?"
 };
 
+/*
+displays number (0 to 20) as circled-number symbol
+*/
+
 CircleNumber = LAMBDA(number, type,
     LET(
         dark, N(type),
@@ -396,6 +423,10 @@ Hypotenuse = LAMBDA(a, b, SQRT(a ^ 2 + b ^ 2));
 
 inList = LAMBDA(list, item, COUNTIF(list, item) > 0);
 
+/*
+prime number detector
+*/
+
 IsPrime = LAMBDA(number,
     IF(
         OR(number < 2, MOD(number, 1)),
@@ -430,6 +461,9 @@ LoanTotalInteresttoPrinciple = LAMBDA(rate, nper, pv, type,
         CUMPRINC(rate, nper, pv, 1, nper, type)
 );
 
+/*
+must copy-paste value to capture a password
+*/
 Password = LAMBDA(charlist, length,
     IF(
         length < 1,
@@ -453,6 +487,12 @@ PerimeterTrapezoid = LAMBDA(a, b, c, d, SUM(a, b, c, d));
 
 PerimeterTriangle = LAMBDA(a, b, c, SUM(a, b, c));
 
+/*
+lists all members of PERMUTATIONA
+hold must = select to keep initial number constant
+looking for way to avoid hold as input
+challenge: list PERMUT, COMBIN and COMBINA members
+*/
 PermutationsAll = LAMBDA(select, hold, from,
     LET(
         Items, ROWS(from),
